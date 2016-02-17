@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <defaultCache maxElementsInMemory="500" eternal="true"
+                  overflowToDisk="false" memoryStoreEvictionPolicy="LFU"/>
+    <cache name="com.jztey.rbac.service.UserService" maxElementsInMemory="10000" eternal="true" overflowToDisk="false"
+           memoryStoreEvictionPolicy="LFU"/>
+    <!-- BaseCacheableService, 查询实时性要求不高, 10分钟缓存过期 -->
+    <cache name="com.jztey.rbac.service.UserService.query" maxElementsInMemory="10000" timeToLiveSeconds="600"
+           timeToIdleSeconds="600" overflowToDisk="false" memoryStoreEvictionPolicy="LFU"/>
+
+    <!-- RealtimeQueryCacheableService, 查询实时性要求高, 程序会主动清空查询缓存 -->
+    <!--<cache name="com.jztey.rbac.service.UserService.query" maxElementsInMemory="10000" eternal="true"-->
+           <!--overflowToDisk="false" memoryStoreEvictionPolicy="LFU"/>-->
+
+    <cache name="com.jztey.rbac.service.PermissionService" maxElementsInMemory="10000" eternal="true" overflowToDisk="false"
+           memoryStoreEvictionPolicy="LFU"/>
+    <!-- BaseCacheableService, 查询实时性要求不高, 10分钟缓存过期 -->
+    <cache name="com.jztey.rbac.service.PermissionService.query" maxElementsInMemory="10000" timeToLiveSeconds="600"
+           timeToIdleSeconds="600" overflowToDisk="false" memoryStoreEvictionPolicy="LFU"/>
+
+
+</ehcache>
