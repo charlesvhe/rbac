@@ -11,5 +11,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Permission {
+    /**
+     * 忽略权限检查
+     */
+    String IGNORE = "IGNORE";
     String value() default "";
 }

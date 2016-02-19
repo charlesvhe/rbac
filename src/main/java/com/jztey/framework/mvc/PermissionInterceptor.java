@@ -3,10 +3,12 @@ package com.jztey.framework.mvc;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.util.WebUtils;
 
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +19,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by charles on 2/2/16.
  */
 public class PermissionInterceptor extends HandlerInterceptorAdapter {
-    public static final String COOKIE_NAME_TOKEN = "TOKEN";
+    public interface AuthenticationManager {
+        boolean isLogin(String token);
+
+        boolean isPermission(String token, String permission);
+    }
+
+    public static final String TOKEN_KEY = "TOKEN";
     public static final String NOT_PERMISSION_METHOD = "NPM";
     private ConcurrentHashMap<Method, String> methodPermissionCache = new ConcurrentHashMap<>();
+
+    @Inject
+    private AuthenticationManager authenticationManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -39,7 +50,11 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
                         permission += classPermission.value();
                     }
                     if (null != methodPermission) {
-                        permission += methodPermission.value();
+                        if (Permission.IGNORE.equals(methodPermission.value())) {
+                            permission = NOT_PERMISSION_METHOD;
+                        }else{
+                            permission += methodPermission.value();
+                        }
                     }
                 }
 
@@ -47,27 +62,26 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
             }
 
             if (!NOT_PERMISSION_METHOD.equals(permission)) {
-                String token = request.getParameter(COOKIE_NAME_TOKEN);
+                Cookie tokenCookie = WebUtils.getCookie(request, TOKEN_KEY);
+                String token = null;
+                if (null != tokenCookie) {
+                    token = tokenCookie.getValue();
+                }
+                if (null == token) {
+                    token = request.getParameter(TOKEN_KEY);
+                }
 
-                if (!isLogin(token)) {
+                if (!authenticationManager.isLogin(token)) {
                     response.sendError(HttpStatus.UNAUTHORIZED.value(), "请重新登录");
                     return false;
                 }
 
-                if (!StringUtils.isEmpty(permission) && !isPermission(token, permission)) {
+                if (!StringUtils.isEmpty(permission) && !authenticationManager.isPermission(token, permission)) {
                     response.sendError(HttpStatus.UNAUTHORIZED.value());
                     return false;
                 }
             }
         }
-        return true;
-    }
-
-    private boolean isLogin(String token) {
-        return true;
-    }
-
-    private boolean isPermission(String token, String permission) {
         return true;
     }
 }

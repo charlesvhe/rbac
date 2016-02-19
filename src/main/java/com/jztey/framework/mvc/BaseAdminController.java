@@ -16,6 +16,7 @@ public abstract class BaseAdminController<T extends BaseEntity> {
     public abstract BaseService<T> getBaseAdminService();
 
     @RequestMapping(method = RequestMethod.GET)
+    @Permission("#get")
     public RestfulResult<T> index(@RequestParam(name = "page", defaultValue = "1") int page,
                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                   @RequestParam(name = "total", defaultValue = "-1") int total,
@@ -29,6 +30,7 @@ public abstract class BaseAdminController<T extends BaseEntity> {
     }
 
     @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.GET)
+    @Permission("/{id}#get")
     public RestfulResult<T> get(@PathVariable Long id) {
         T entity = this.getBaseAdminService().find(id);
 
@@ -36,6 +38,7 @@ public abstract class BaseAdminController<T extends BaseEntity> {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @Permission("#post")
     public RestfulResult<T> post(T entity) {
         this.getBaseAdminService().persist(entity);
 
@@ -43,6 +46,7 @@ public abstract class BaseAdminController<T extends BaseEntity> {
     }
 
     @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.PUT)
+    @Permission("/{id}#put")
     public RestfulResult<T> put(@PathVariable Long id, T entity) {
         this.getBaseAdminService().merge(entity);
 
@@ -50,6 +54,7 @@ public abstract class BaseAdminController<T extends BaseEntity> {
     }
 
     @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
+    @Permission("/{id}#delete")
     public RestfulResult<T> delete(@PathVariable Long id) {
         this.getBaseAdminService().remove(id);
 

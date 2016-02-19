@@ -2,8 +2,11 @@ package com.jztey.framework.cache;
 
 import com.jztey.framework.mvc.BaseEntity;
 import com.jztey.framework.mvc.BaseService;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.*;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
@@ -19,6 +22,12 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = SpelCacheNameCacheResolver.SPEL_CACHE_NAME, cacheResolver = SpelCacheNameCacheResolver.BEAN_NAME)
 public abstract class BaseCacheableService<T extends BaseEntity> extends BaseService<T> {
+    @Inject
+    private CacheManager cacheManager;
+
+    public Cache getCache(){
+        return cacheManager.getCache(this.getClass().getName());
+    }
 
     @Override
     @Transactional
