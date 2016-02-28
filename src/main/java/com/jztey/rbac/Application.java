@@ -1,21 +1,17 @@
 package com.jztey.rbac;
 
 import com.jztey.framework.cache.SpelCacheNameCacheResolver;
-import com.jztey.rbac.service.UserService;
+import com.jztey.framework.mvc.PermissionInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.interceptor.*;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-
-import java.util.Arrays;
+import org.springframework.web.servlet.handler.MappedInterceptor;
 
 /**
  * Created by Charles on 2016/2/27.
@@ -23,6 +19,16 @@ import java.util.Arrays;
 @EnableCaching
 @SpringBootApplication
 public class Application implements CachingConfigurer {
+    @Bean
+    public PermissionInterceptor permissionInterceptor() {
+        return new PermissionInterceptor();
+    }
+
+    @Bean
+    public MappedInterceptor mappedPermissionInterceptor() {
+        return new MappedInterceptor(new String[]{"/api/**"}, permissionInterceptor());
+    }
+
     @Bean
     @Override
     public CacheManager cacheManager() {
