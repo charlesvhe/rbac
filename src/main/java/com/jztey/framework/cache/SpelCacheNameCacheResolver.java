@@ -12,7 +12,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -45,6 +47,10 @@ public class SpelCacheNameCacheResolver extends AbstractCacheResolver {
             operationCacheNamesCache.put(operation, cacheNames);
         }
         return cacheNames;
+    }
+
+    @Override
+    public void afterPropertiesSet() {
     }
 
     @Inject

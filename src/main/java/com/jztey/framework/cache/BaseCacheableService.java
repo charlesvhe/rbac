@@ -20,7 +20,7 @@ import java.util.List;
  * 适用于对查询实时性要求不高的场合
  * Created by charles on 2/3/16.
  */
-@CacheConfig(cacheNames = SpelCacheNameCacheResolver.SPEL_CACHE_NAME, cacheResolver = SpelCacheNameCacheResolver.BEAN_NAME)
+@CacheConfig(cacheNames = SpelCacheNameCacheResolver.SPEL_CACHE_NAME)//, cacheResolver = SpelCacheNameCacheResolver.BEAN_NAME)
 public abstract class BaseCacheableService<T extends BaseEntity> extends BaseService<T> {
     @Inject
     private CacheManager cacheManager;

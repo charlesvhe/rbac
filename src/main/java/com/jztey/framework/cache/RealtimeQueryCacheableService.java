@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 注意: 如果增删改过于频繁, 将导致 SPEL_CACHE_NAME_QUERY 缓存命中率急剧降低, 需要考虑自行维护缓存
  * Created by charles on 2/3/16.
  */
-@CacheConfig(cacheNames = SpelCacheNameCacheResolver.SPEL_CACHE_NAME, cacheResolver = SpelCacheNameCacheResolver.BEAN_NAME)
+@CacheConfig(cacheNames = SpelCacheNameCacheResolver.SPEL_CACHE_NAME)//, cacheResolver = SpelCacheNameCacheResolver.BEAN_NAME)
 public abstract class RealtimeQueryCacheableService<T extends BaseEntity> extends BaseCacheableService<T> {
 
     @Override
