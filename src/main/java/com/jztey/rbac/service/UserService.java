@@ -15,7 +15,7 @@ import java.util.UUID;
  * Created by charles on 2/1/16.
  */
 @Named
-public class UserService extends RealtimeQueryCacheableService<User> implements PermissionInterceptor.AuthenticationManager {
+public class UserService extends RealtimeQueryCacheableService<User> implements PermissionInterceptor.AuthenticationManager, UserServiceInterface {
     public static String TOKEN_PREFIX = "TOKEN_";
     @Inject
     private PermissionService permissionService;
@@ -27,6 +27,7 @@ public class UserService extends RealtimeQueryCacheableService<User> implements 
         return dao;
     }
 
+    @Override
     public String verify(String account, String password) {
         User example = new User();
         example.setAccount(account);
